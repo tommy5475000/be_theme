@@ -55,8 +55,8 @@ export class InvoiceItController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        // destination: '/usr/share/be/uploads/scan',
-        destination: '/Volumes/FILESCAN/invoice-scan',
+        destination: '/usr/share/be/uploads/scan',
+        // destination: '/Volumes/FILESCAN/invoice-scan',
         filename: (req, file, cb) => {
           const now = new Date();
           const dd = String(now.getDate()).padStart(2, '0');
