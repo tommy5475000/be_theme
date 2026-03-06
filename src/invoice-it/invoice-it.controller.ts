@@ -13,11 +13,8 @@ import {
 import { InvoiceItService } from './invoice-it.service';
 import { CreateInvoiceItDto } from './dto/create-invoice-it.dto';
 import { UpdateInvoiceItDto } from './dto/update-invoice-it.dto';
-import { Prisma } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
-import * as express from 'express';
 
 @Controller('api/invoice-it')
 export class InvoiceItController {
@@ -58,7 +55,8 @@ export class InvoiceItController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads/invoice-scan',
+        // destination: '/usr/share/be/uploads/scan',
+        destination: '/Volumes/FILESCAN/invoice-scan',
         filename: (req, file, cb) => {
           const now = new Date();
           const dd = String(now.getDate()).padStart(2, '0');

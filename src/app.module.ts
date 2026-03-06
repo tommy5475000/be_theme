@@ -11,7 +11,7 @@ import { NhomlvModule } from './nhomlv/nhomlv.module';
 // import { Lv2Module } from './lv2/lv2.module';
 import { InvoiceItModule } from './invoice-it/invoice-it.module';
 import { DashboardAdminModule } from './dashboard-admin/dashboard-admin.module';
-
+import { ServeStaticModule } from '@nestjs/serve-static';
 @Module({
   imports: [
     UserModule,
@@ -23,6 +23,10 @@ import { DashboardAdminModule } from './dashboard-admin/dashboard-admin.module';
     NhomlvModule,
     InvoiceItModule,
     DashboardAdminModule,
+    ServeStaticModule.forRoot({
+      rootPath: '/Volumes/FILESCAN',
+      serveRoot: '/files',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

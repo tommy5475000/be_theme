@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -68,22 +68,59 @@ export class UserService {
       );
     }
 
+    const updateData: any = {
+      userId: body.userId,
+      fullName: body.fullName,
+      userName: body.userName,
+      email: body.email,
+      brithday: body.brithday,
+      phone: body.phone,
+      status: Boolean(body.status),
+      vaiTro: body.vaiTro,
+      address: body.address,
+      modifiedDate: new Date(),
+    };
+
+    if (body.pass) {
+      updateData.pass = bcrypt.hashSync(body.pass, 10);
+    }
+
     const data = await this.prisma.users.update({
       where: {
         userId: checkEditUser.userId,
       },
+      data: updateData,
+    });
+    return { message: 'Thành công', data, date: new Date() };
+  }
+
+  // ----- DEL USER ----- //
+  async delUser(id: number) {
+    const checkUser = await this.prisma.users.findFirst({
+      where: {
+        userId: Number(id),
+      },
+    });
+
+    if (!checkUser) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'User này không tồn tại',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const data = await this.prisma.users.update({
+      where: {
+        userId: Number(id),
+      },
       data: {
-        fullName: body.fullName,
-        userName: body.userName,
-        email: body.email,
-        brithday: body.brithday,
-        phone: body.phone,
-        status: body.status,
-        vaiTro: body.vaiTro,
-        address: body.address,
+        status: false,
         modifiedDate: new Date(),
       },
     });
-    return { messega: 'Thành công', data, date: new Date() };
+    return { message: 'Thành công', data, date: new Date() };
   }
 }

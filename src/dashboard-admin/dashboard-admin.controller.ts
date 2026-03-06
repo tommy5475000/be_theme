@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { DashboardAdminService } from './dashboard-admin.service';
 import { CreateDashboardAdminDto } from './dto/create-dashboard-admin.dto';
@@ -31,5 +32,11 @@ export class DashboardAdminController {
   @Post('editDashboardLink')
   editDashboardLink(@Body() body: any) {
     return this.dashboardAdminService.editDashboardLink(body);
+  }
+
+  // ----- DEL LINK BI ----- //
+  @Delete('delDashboardLink')
+  delDashboardLink(@Query('id') id: number) {
+    return this.dashboardAdminService.delDashboardLink(id);
   }
 }

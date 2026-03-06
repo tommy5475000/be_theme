@@ -43,6 +43,7 @@ export class DashboardAdminService {
 
   // ----- EDIT LINK BI ----- //
   async editDashboardLink(body: any) {
+    console.log(body);
     const checkEdit = await this.prisma.powerBi.findFirst({
       where: {
         id: body.id,
@@ -66,6 +67,37 @@ export class DashboardAdminService {
       data: {
         title: body.title,
         link: body.link,
+        status: Boolean(body.status),
+        modifiedDate: new Date(),
+      },
+    });
+    return { message: 'Thành công', data, date: new Date() };
+  }
+
+  // ----- DEL LINK BI ----- //
+  async delDashboardLink(id: number) {
+
+    const checkLink = await this.prisma.powerBi.findFirst({
+      where: {
+        id: Number(id),
+      },
+    });
+    if (!checkLink) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Link này không tồn tại',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const data = await this.prisma.powerBi.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        status: false,
         modifiedDate: new Date(),
       },
     });

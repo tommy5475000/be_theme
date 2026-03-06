@@ -379,4 +379,17 @@ export class InvoiceItService {
       },
     });
   }
+  // async uploadScan(id: number, file: Express.Multer.File) {
+  //   const filePath = path.join('/filescan', file.originalname);
+
+  //   fs.writeFileSync(filePath, file.buffer);
+
+  //   return this.prisma.invoiceIt.update({
+  //     where: { id: Number(id) },
+  //     data: {
+  //       file: file.originalname,
+  //       modifiedDate: new Date(),
+  //     },
+  //   });
+  // }
 }
