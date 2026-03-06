@@ -23,11 +23,16 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     NhomlvModule,
     InvoiceItModule,
     DashboardAdminModule,
+    // ServeStaticModule.forRoot({
+    //   rootPath: '/Volumes/FILESCAN',
+    //   serveRoot: '/files',
+    // }),
     ServeStaticModule.forRoot({
-      rootPath: '/Volumes/FILESCAN',
+      rootPath: '/usr/share/be/uploads',
       serveRoot: '/files',
     }),
   ],
+
   controllers: [AppController],
   providers: [AppService],
 })
