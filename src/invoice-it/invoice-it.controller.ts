@@ -3,18 +3,15 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
   Delete,
   Query,
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
 import { InvoiceItService } from './invoice-it.service';
-import { CreateInvoiceItDto } from './dto/create-invoice-it.dto';
-import { UpdateInvoiceItDto } from './dto/update-invoice-it.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+
 
 @Controller('api/invoice-it')
 export class InvoiceItController {
@@ -58,14 +55,19 @@ export class InvoiceItController {
         destination: '/usr/share/be/uploads/scan',
         // destination: '/Volumes/FILESCAN/invoice-scan',
         filename: (req, file, cb) => {
-          const now = new Date();
-          const dd = String(now.getDate()).padStart(2, '0');
-          const mm = String(now.getMonth() + 1).padStart(2, '0');
-          const yyyy = now.getFullYear();
+          // const now = new Date();
+          // const dd = String(now.getDate()).padStart(2, '0');
+          // const mm = String(now.getMonth() + 1).padStart(2, '0');
+          // const yyyy = now.getFullYear();
 
-          const onlyDate = `${dd}-${mm}-${yyyy}`; // 03-12-2025
-          const originalName = file.originalname.replace(/\s+/g, '_'); // bỏ khoảng trắng
-          cb(null, `${onlyDate}_${file.originalname}`);
+          // const onlyDate = `${dd}-${mm}-${yyyy}`; // 03-12-2025
+
+          const originalname = file.originalname
+            .replace(/\s+/g, '_') // space → _
+            .replace(/[^\w.-]/g, ''); // xoá ký tự đặc biệt
+
+          // const originalName = file.originalname.replace(/\s+/g, '_'); // bỏ khoảng trắng
+          cb(null, originalname);
         },
       }),
     }),
