@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+import { createToken } from '../config/jwt.js';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  prisma = new PrismaClient();
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async login(body: any) {
+    const checkUser = await this.prisma.users.findFirst({
+      where: {
+        userName: body.userName,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    if (!checkUser) {
+      throw new UnauthorizedException('Tên đăng nhập không đúng'); // ✅
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const checkPass = bcrypt.compareSync(body.password, checkUser.pass);
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    if (!checkPass) {
+      throw new UnauthorizedException('Mật khẩu không đúng'); // ✅
+    }
+
+    const token = createToken({
+      userId: checkUser.userId,
+      vaiTroId: checkUser.vaiTroId,
+    });
+
+    return { message: 'Đăng nhập thành công', token, date: new Date() };
   }
 }

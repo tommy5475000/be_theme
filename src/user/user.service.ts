@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { hash } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -37,13 +38,18 @@ export class UserService {
         userName: body.userName,
         pass: bcrypt.hashSync(body.pass, 10),
         email: body.email,
-        brithday: body.brithday,
+        brithday: body.brithday || null,
         phone: body.phone,
         fullName: body.fullName,
         createDate: new Date(),
         status: true,
-        vaiTro: body.vaiTro,
         address: body.address,
+        boPhan: {
+          connect: { id: Number(body.boPhan) },
+        },
+        vaiTro: {
+          connect: { id: Number(body.vaiTro) },
+        },
       },
     });
 
@@ -73,7 +79,7 @@ export class UserService {
       fullName: body.fullName,
       userName: body.userName,
       email: body.email,
-      brithday: body.brithday,
+      brithday: body.brithday || null,
       phone: body.phone,
       status: Boolean(body.status),
       vaiTro: body.vaiTro,
@@ -94,7 +100,38 @@ export class UserService {
     return { message: 'Thành công', data, date: new Date() };
   }
 
-  // ----- DEL USER ----- //
+  // ----- ĐỔI MẬT KHẨU ----- //
+  async changePass(body: any) {
+    const checkUser = await this.prisma.users.findFirst({
+      where: { userId: body.userId },
+    });
+
+    if (!checkUser) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'User này không tồn tại',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const passWord = bcrypt.hashSync(body.pass, 10);
+
+    const data = await this.prisma.users.update({
+      where: {
+        userId: body.userId,
+      },
+      data: {
+        pass: passWord,
+        modifiedDate: new Date(),
+      },
+    });
+
+    return { message: 'Thành công', data, date: new Date() };
+  }
+
+  // ----- TẠM NGƯNG USER ----- //
   async delUser(id: number) {
     const checkUser = await this.prisma.users.findFirst({
       where: {

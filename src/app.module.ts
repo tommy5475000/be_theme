@@ -5,32 +5,34 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 // import { SkuModule } from './sku/sku.module';
 import { ConfigModule } from '@nestjs/config';
-import { NccModule } from './ncc/ncc.module';
-import { NhomlvModule } from './nhomlv/nhomlv.module';
+// import { NccModule } from './ncc/ncc.module';
+// import { NhomlvModule } from './nhomlv/nhomlv.module';
 // import { Lv1Module } from './lv1/lv1.module';
 // import { Lv2Module } from './lv2/lv2.module';
 import { InvoiceItModule } from './invoice-it/invoice-it.module';
 import { DashboardAdminModule } from './dashboard-admin/dashboard-admin.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { BophanModule } from './bophan/bophan.module';
+import { VaitroModule } from './vaitro/vaitro.module';
+import { PhanquyenModule } from './phanquyen/phanquyen.module';
 @Module({
   imports: [
     UserModule,
     AuthModule,
-    NccModule,
+    // NccModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    NhomlvModule,
+    // NhomlvModule,
     InvoiceItModule,
     DashboardAdminModule,
-    // ServeStaticModule.forRoot({
-    //   rootPath: '/Volumes/FILESCAN',
-    //   serveRoot: '/files',
-    // }),
+    BophanModule,
     ServeStaticModule.forRoot({
       rootPath: '/usr/share/be/uploads',
       serveRoot: '/files',
     }),
+    VaitroModule,
+    PhanquyenModule,
   ],
 
   controllers: [AppController],

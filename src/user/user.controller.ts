@@ -9,9 +9,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { query } from 'express';
 
 @Controller('api/user')
 export class UserController {
@@ -35,7 +32,13 @@ export class UserController {
     return this.userService.editUser(body);
   }
 
-  // ----- DEL USER ----- //
+  // ----- ĐỔI MẬT KHẨU ----- //
+  @Post('changePass')
+  changePass(@Body() body: { pass: string }) {
+    return this.userService.changePass(body);
+  }
+
+  // ----- TẠM NGƯNG USER ----- //
   @Delete('delUser')
   delUser(@Query('id') id: number) {
     return this.userService.delUser(id);
