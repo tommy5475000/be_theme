@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { createToken } from '../config/jwt.js';
@@ -15,13 +15,13 @@ export class AuthService {
     });
 
     if (!checkUser) {
-      throw new UnauthorizedException('Tên đăng nhập không đúng'); // ✅
+      throw new BadRequestException('Tên đăng nhập này không tồn tại');
     }
 
     const checkPass = bcrypt.compareSync(body.password, checkUser.pass);
 
     if (!checkPass) {
-      throw new UnauthorizedException('Mật khẩu không đúng'); // ✅
+      throw new BadRequestException('Mật khẩu không đúng'); // ✅
     }
 
     const token = createToken({
